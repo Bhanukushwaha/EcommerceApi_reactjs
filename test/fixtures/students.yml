@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  firstname: MyString
+  last_name: MyString
+  roll_number: MyString
+  district: MyString
+  branch: MyString
+  active: false
+
+two:
+  firstname: MyString
+  last_name: MyString
+  roll_number: MyString
+  district: MyString
+  branch: MyString
+  active: false
