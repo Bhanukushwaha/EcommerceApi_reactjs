@@ -1,9 +1,14 @@
 class StudentsController < ApplicationController
   before_action :authorize_request!
 	before_action :find_student,only: [:show,:update,:destroy]
-	# def  index
-	#  @student = Student.all
-	# end
+	def  index
+	 if params[:search].present?
+  		@students = Student.where("lower(roll_number) LIKE ? OR lower(firstname) LIKE ? OR lower(last_name) LIKE ?", "%#{params[:search].strip.downcase}%", "%#{params[:search].strip.downcase}%", "%#{params[:search].strip.downcase}%").paginate(page: params[:page], per_page: 10)
+  	else
+  		@students = Student.all.paginate(page: params[:page], per_page: 20)
+  	end
+		render json: {data: @students, message: "Student lists", meta: {total_page: @students.total_pages}}
+	end
 	def student_search
   	if params[:search].present?
   		@students = Student.where("lower(roll_number) LIKE ? OR lower(firstname) LIKE ? OR lower(last_name) LIKE ?", "%#{params[:search].strip.downcase}%", "%#{params[:search].strip.downcase}%", "%#{params[:search].strip.downcase}%").paginate(page: params[:page], per_page: 10)

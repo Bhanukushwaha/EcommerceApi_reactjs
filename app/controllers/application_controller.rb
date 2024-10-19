@@ -2,7 +2,6 @@ class ApplicationController < ActionController::Base
  skip_before_action :verify_authenticity_token
   helper_method :current_user
   def current_user
-  	debugger
     if request.headers['Token'].present?
       header = request.headers['Token']
       begin

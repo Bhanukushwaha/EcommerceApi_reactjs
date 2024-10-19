@@ -15,14 +15,13 @@ class UsersController < ApplicationController
    
   def create
     if (params[:user][:password] != params[:user][:password_confirmation])
-      render json: {message: "password does not match?" }, status: :unprocessable_entity
+      render json: {errors: {password: ["password does not match?"]}}, status: :unprocessable_entity
     else
       @user = User.new(user_params)
       if @user.save
         render json: @user, status: :created
       else
-        render json: { errors: @user.errors.full_messages.join(", ") },
-        status: :unprocessable_entity
+        render json: { errors: @user.errors }, status: :unprocessable_entity
       end
     end
   end
@@ -30,8 +29,7 @@ class UsersController < ApplicationController
   # PUT /users/{username}
   def update
     unless @user.update(user_params)
-      render json: { errors: @user.errors.full_messages },
-      status: :unprocessable_entity
+      render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
