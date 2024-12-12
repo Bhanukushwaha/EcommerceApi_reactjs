@@ -13,9 +13,9 @@ class StudentsController < ApplicationController
   	if params[:search].present?
   		@students = Student.where("lower(roll_number) LIKE ? OR lower(firstname) LIKE ? OR lower(last_name) LIKE ?", "%#{params[:search].strip.downcase}%", "%#{params[:search].strip.downcase}%", "%#{params[:search].strip.downcase}%").paginate(page: params[:page], per_page: 10)
   	else
-  		@students = Student.all.paginate(page: params[:page], per_page: 3)
+  		@students = Student.all.paginate(page: params[:page], per_page: 23)
   	end
-		render json: {data: @students, message: "Student lists", meta: {total_page: @students.total_pages}}
+		render json: {data: @students.map{ |student| student.attributes.merge(image: student.image_url)}, message: "Student lists", meta: {total_page: @students.total_pages}}
   end
 	def show
 		render json: {data: @student, message: "student create sussefully"}
@@ -23,7 +23,7 @@ class StudentsController < ApplicationController
 	def create
 		@student = Student.new(student_params)
 		if @student.save
-			 render json: {data: @student, message: "student create sussefully"}
+			 render json: {data: @student.attributes.merge(success: true), message: "student create sussefully"}
 		 else
 			 return render json: {error: @student.errors}, student: :unprocessable_entity
 		end
@@ -44,6 +44,6 @@ class StudentsController < ApplicationController
     end 
 	end
 	def student_params
-		params.require(:student).permit(:firstname, :last_name, :roll_number, :district, :branch, :active)
+		params.permit(:firstname, :last_name, :roll_number, :district, :branch, :active, :image)
 	end
 end
